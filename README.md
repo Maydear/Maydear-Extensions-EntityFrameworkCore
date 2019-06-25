@@ -1,3 +1,3 @@
-# ef-extensions
+# EntityFrameworkCore
 
 EntityFrameworkCore的扩展
