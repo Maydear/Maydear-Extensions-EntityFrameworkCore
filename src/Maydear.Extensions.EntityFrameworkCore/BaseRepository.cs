@@ -1,4 +1,4 @@
-﻿/*****************************************************************************************
+/*****************************************************************************************
  * Copyright (c) 2008-2019 kelvin(kelvin@onloch.com)
  * 梁乔峰版权所有2008-2019。
  * 本软件文档资料是梁乔峰的资产,任何人士阅读和使用本资料必
@@ -61,7 +61,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <param name="logger">日志组件</param>
         protected BaseRepository(DbContext context, ILogger logger)
         {
-            this.Context = context;
+            Context = context;
             this.logger = logger;
         }
 
@@ -92,7 +92,15 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// </summary>
         /// <param name="func">实体加工参数</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public abstract bool Change(T entity);
+        public virtual bool Change(T entity)
+        {
+            if (Context.Entry<T>(entity).State == EntityState.Detached)
+            {
+                Context.Attach<T>(entity);
+            }
+            Context.Entry<T>(entity).State = EntityState.Modified;
+            return Context.SaveChanges() > 0;
+        }
 
         /// <summary>
         /// 更新实体
@@ -102,11 +110,11 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns></returns>
         public virtual bool Change(Expression<Func<T, bool>> condition, Action<T> actionEntity)
         {
-            if(condition==null)
+            if (condition == null)
             {
-               throw new ArgumentNullException(nameof(condition));
+                throw new ArgumentNullException(nameof(condition));
             }
-        
+
             T dbEntity = DbSetEntities.FirstOrDefault(condition);
             actionEntity(dbEntity);
             return Context.SaveChanges() > 0;
@@ -117,7 +125,19 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// </summary>
         /// <param name="func">实体加工参数</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public abstract bool ChangeRange(IList<T> entities);
+        public virtual bool ChangeRange(IList<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                if (Context.Entry<T>(entity).State == EntityState.Detached)
+                {
+                    Context.Attach<T>(entity);
+                }
+                Context.Entry<T>(entity).State = EntityState.Modified;
+            }
+            
+            return Context.SaveChanges() > 0;
+        }
 
         /// <summary>
         /// 更新实体集合
@@ -138,13 +158,13 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回满足当前条件的实体数量</returns>
         public virtual long Count(Expression<Func<T, bool>> condition)
         {
-            if(condition != null)
+            if (condition != null)
             {
-               return DbSetEntities.Count(condition);
+                return DbSetEntities.Count(condition);
             }
             else
             {
-               return DbSetEntities.Count();
+                return DbSetEntities.Count();
             }
         }
 
@@ -155,9 +175,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>如果存在则返回true，反之则为false</returns>
         public virtual bool Exists(Expression<Func<T, bool>> condition)
         {
-            if(condition == null)
+            if (condition == null)
             {
-               throw new ArgumentNullException(nameof(condition));
+                throw new ArgumentNullException(nameof(condition));
             }
             return DbSetEntities.Any(condition);
         }
@@ -169,15 +189,15 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回实体集</returns>
         public virtual IEnumerable<T> GetEntities(Expression<Func<T, bool>> condition)
         {
-            if(condition != null)
+            if (condition != null)
             {
-               return DbSetEntities.Where(condition);
+                return DbSetEntities.Where(condition);
             }
             else
             {
-               return DbSetEntities;
+                return DbSetEntities;
             }
-            
+
         }
 
         /// <summary>
@@ -204,14 +224,14 @@ namespace Maydear.Extensions.EntityFrameworkCore
         public virtual IEnumerable<T> GetEntities<TKey>(Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
             IQueryable<T> query = DbSetEntities;
-            if(condition != null)
+            if (condition != null)
             {
-               query= query.Where(condition);
+                query = query.Where(condition);
             }
-            
-            if(orderBySelector != null)
+
+            if (orderBySelector != null)
             {
-               query = query.OrderBy(orderBySelector);
+                query = query.OrderBy(orderBySelector);
             }
             return query;
         }
@@ -225,14 +245,14 @@ namespace Maydear.Extensions.EntityFrameworkCore
         public virtual IEnumerable<T> GetEntitiesOrderByDescending<TKey>(Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
             IQueryable<T> query = DbSetEntities;
-            if(condition != null)
+            if (condition != null)
             {
-               query= query.Where(condition);
+                query = query.Where(condition);
             }
-            
-            if(orderBySelector != null)
+
+            if (orderBySelector != null)
             {
-               query = query.OrderByDescending(orderBySelector);
+                query = query.OrderByDescending(orderBySelector);
             }
             return query;
         }
@@ -244,9 +264,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回单个实体，如果存在多个实体时返回第一个</returns>
         public virtual T GetEntity(Expression<Func<T, bool>> condition)
         {
-            if(condition == null)
+            if (condition == null)
             {
-               throw new ArgumentNullException(nameof(condition));
+                throw new ArgumentNullException(nameof(condition));
             }
             return DbSetEntities.FirstOrDefault(condition);
         }
@@ -346,7 +366,15 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// </summary>
         /// <param name="entity">移除的实体</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public abstract bool Remove(T entity);
+        public virtual bool Remove(T entity)
+        {
+            if (Context.Entry<T>(entity).State == EntityState.Detached)
+            {
+                Context.Attach<T>(entity);
+            }
+            DbSetEntities.Remove(entity);
+            return Context.SaveChanges() > 0;
+        }
 
         /// <summary>
         /// 按指定条件移除实体
@@ -355,12 +383,12 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Remove(Expression<Func<T, bool>> condition)
         {
-            if(condition == null)
+            if (condition == null)
             {
-               throw new ArgumentNullException(nameof(condition));
+                throw new ArgumentNullException(nameof(condition));
             }
-        
-            var dbEntities = DbSetEntities.Where(condition).ToList();
+
+            List<T> dbEntities = DbSetEntities.Where(condition).ToList();
             if (dbEntities.Any())
             {
                 DbSetEntities.RemoveRange(dbEntities);
