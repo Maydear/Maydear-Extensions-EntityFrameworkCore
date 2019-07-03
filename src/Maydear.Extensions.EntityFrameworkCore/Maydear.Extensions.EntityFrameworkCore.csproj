@@ -13,7 +13,7 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Title>Maydear EntityFrameworkCore Extensions仓储接口</Title>
         <Description>EntityFrameworkCore仓储基础类</Description>
-        <Version>1.0.1-preview01</Version>
+        <Version>1.0.1-preview02</Version>
         <AssemblyName>Maydear.Extensions.EntityFrameworkCore</AssemblyName>
         <NeutralLanguage>zh-CN</NeutralLanguage>
         <Language>zh-CN</Language>

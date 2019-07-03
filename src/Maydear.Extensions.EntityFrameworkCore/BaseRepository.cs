@@ -223,15 +223,15 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回实体集</returns>
         public virtual IEnumerable<T> GetEntities<TKey>(Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
-            IQueryable<T> query = DbSetEntities;
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            IQueryable<T> query = DbSetEntities.AsNoTracking();
 
             if (orderBySelector != null)
             {
                 query = query.OrderBy(orderBySelector);
+            }
+            if (condition != null)
+            {
+                query = query.Where(condition);
             }
             return query;
         }
@@ -244,7 +244,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回实体集</returns>
         public virtual IEnumerable<T> GetEntitiesOrderByDescending<TKey>(Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
-            IQueryable<T> query = DbSetEntities;
+            IQueryable<T> query = DbSetEntities.AsNoTracking();
             if (condition != null)
             {
                 query = query.Where(condition);
@@ -279,7 +279,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回带分页信息的实体集</returns>
         public virtual IPageCollection<T> GetPageEntities(Page page, Expression<Func<T, bool>> condition)
         {
-            IQueryable<T> entities = DbSetEntities;
+            IQueryable<T> entities = DbSetEntities.AsNoTracking();
             if (condition != null)
             {
                 entities = entities.Where(condition);
@@ -306,7 +306,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回带分页信息的实体集</returns>
         public virtual IPageCollection<T> GetPageEntities<TKey>(Page page, Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
-            IQueryable<T> entities = DbSetEntities;
+            IQueryable<T> entities = DbSetEntities.AsNoTracking();
             if (condition != null)
             {
                 entities = entities.Where(condition);
@@ -338,7 +338,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>返回带分页信息的实体集</returns>
         public virtual IPageCollection<T> GetPageEntitiesOrderByDescending<TKey>(Page page, Expression<Func<T, bool>> condition, Expression<Func<T, TKey>> orderBySelector)
         {
-            IQueryable<T> entities = DbSetEntities;
+            IQueryable<T> entities = DbSetEntities.AsNoTracking();
             if (condition != null)
             {
                 entities = entities.Where(condition);
