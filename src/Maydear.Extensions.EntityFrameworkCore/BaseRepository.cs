@@ -90,7 +90,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <summary>
         /// 更新实体
         /// </summary>
-        /// <param name="func">实体加工参数</param>
+        /// <param name="entity">待更新的实体</param>
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Change(T entity)
         {
@@ -121,9 +121,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
         }
 
         /// <summary>
-        /// 更新实体
+        /// 更新实体集合
         /// </summary>
-        /// <param name="func">实体加工参数</param>
+        /// <param name="entities">实体集合</param>
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool ChangeRange(IList<T> entities)
         {
@@ -143,7 +143,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// 更新实体集合
         /// </summary>
         /// <param name="condition">待更新实体的搜索条件</param>
-        /// <param name="actionEntity">对查询的实体进行操作</param>
+        /// <param name="actionEntities">对查询的实体进行操作</param>
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool ChangeRange(Expression<Func<T, bool>> condition, Action<IList<T>> actionEntities)
         {
