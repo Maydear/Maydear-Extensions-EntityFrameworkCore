@@ -88,6 +88,24 @@ namespace Maydear.Extensions.EntityFrameworkCore
         }
 
         /// <summary>
+        /// 链接同步实体
+        /// </summary>
+        /// <param name="entity">待同步的实体，主要根据主键为链接同步依据</param>
+        public virtual void Attach(T entity)
+        {
+            Context.Attach<T>(entity);
+        }
+
+        /// <summary>
+        /// 链接同步实体集合
+        /// </summary>
+        /// <param name="entities">待同步的实体集合，主要根据主键为链接同步依据</param>
+        public virtual void AttachRange(params T[] entities)
+        {
+            Context.AttachRange(entities);
+        }
+
+        /// <summary>
         /// 更新实体
         /// </summary>
         /// <param name="entity">待更新的实体</param>

@@ -4,6 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageProjectUrl>https://github.com/Maydear/Maydear</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Maydear/Maydear.git</RepositoryUrl>
+        <PackageIconUrl>http://oss.lvcoco.com/static/logo.png</PackageIconUrl>
         <PackageLicenseFile>LICENSE-2.0.txt</PackageLicenseFile>
         <RepositoryType>git</RepositoryType>
         <Copyright>Maydear Team (admin@maydear.com)</Copyright>
@@ -13,7 +14,7 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Title>Maydear EntityFrameworkCore Extensions仓储接口</Title>
         <Description>EntityFrameworkCore仓储基础类</Description>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <AssemblyName>Maydear.Extensions.EntityFrameworkCore</AssemblyName>
         <NeutralLanguage>zh-CN</NeutralLanguage>
         <Language>zh-CN</Language>
@@ -34,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Maydear.Repositories.Abstractions" Version="1.0.1" />
+        <PackageReference Include="Maydear.Repositories.Abstractions" Version="1.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     </ItemGroup>
 
