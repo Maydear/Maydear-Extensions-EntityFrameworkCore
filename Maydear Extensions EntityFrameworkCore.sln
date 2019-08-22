@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maydear.Extensions.EntityFrameworkCore", "src\Maydear.Extensions.EntityFrameworkCore\Maydear.Extensions.EntityFrameworkCore.csproj", "{654F11E2-2D12-4783-9CAE-20D7E3DEC470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maydear.Extensions.EntityFrameworkCore", "src\Maydear.Extensions.EntityFrameworkCore\Maydear.Extensions.EntityFrameworkCore.csproj", "{654F11E2-2D12-4783-9CAE-20D7E3DEC470}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maydear.Extensions.EntityFrameworkCore.Test", "test\Maydear.Extensions.EntityFrameworkCore.Test\Maydear.Extensions.EntityFrameworkCore.Test.csproj", "{C8DDE29A-B4D9-4C7D-87DC-DB3CC99CA939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{654F11E2-2D12-4783-9CAE-20D7E3DEC470}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{654F11E2-2D12-4783-9CAE-20D7E3DEC470}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{654F11E2-2D12-4783-9CAE-20D7E3DEC470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8DDE29A-B4D9-4C7D-87DC-DB3CC99CA939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8DDE29A-B4D9-4C7D-87DC-DB3CC99CA939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8DDE29A-B4D9-4C7D-87DC-DB3CC99CA939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8DDE29A-B4D9-4C7D-87DC-DB3CC99CA939}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

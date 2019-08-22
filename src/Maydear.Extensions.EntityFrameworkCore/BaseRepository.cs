@@ -12,6 +12,7 @@
  * <version>|<author>            |<time>                                    |<desc>
  * 1        |梁乔峰              |2019/05/08 22:41:46                       |创建仓储基础类
 *****************************************************************************************/
+using Maydear.Extensions.EntityFrameworkCore.Internal;
 using Maydear.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
     /// <typeparam name="T"></typeparam>
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
+        
         /// <summary>
         /// 日志组件
         /// </summary>
@@ -72,6 +74,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Add(T entity)
         {
+            logger.LogTraceEntity("Add", entity);
             DbSetEntities.Add(entity);
             return Context.SaveChanges() > 0;
         }
@@ -81,8 +84,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// </summary>
         /// <param name="entities">实体集合</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public virtual bool AddRange(IList<T> entities)
+        public virtual bool AddRange(IEnumerable<T> entities)
         {
+            logger.LogTraceEntity("AddRange", entities);
             DbSetEntities.AddRange(entities);
             return Context.SaveChanges() > 0;
         }
@@ -93,6 +97,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <param name="entity">待同步的实体，主要根据主键为链接同步依据</param>
         public virtual void Attach(T entity)
         {
+            logger.LogTraceEntity("Attach", entity);
             Context.Attach<T>(entity);
         }
 
@@ -102,6 +107,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <param name="entities">待同步的实体集合，主要根据主键为链接同步依据</param>
         public virtual void AttachRange(params T[] entities)
         {
+            logger.LogTraceEntity("AttachRange", entities);
             Context.AttachRange(entities);
         }
 
@@ -112,11 +118,15 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Change(T entity)
         {
+            logger.LogTraceEntity("Change", entity);
             if (Context.Entry<T>(entity).State == EntityState.Detached)
             {
                 Context.Attach<T>(entity);
             }
             Context.Entry<T>(entity).State = EntityState.Modified;
+
+            logger.LogTraceEntity("Change.Entry", Context.Entry<T>(entity));
+
             return Context.SaveChanges() > 0;
         }
 
@@ -134,7 +144,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
             }
 
             T dbEntity = DbSetEntities.FirstOrDefault(condition);
+            logger.LogTraceEntity("Change.OnActionEntityExecuting", dbEntity);
             actionEntity(dbEntity);
+            logger.LogTraceEntity("Change.OnActionEntityExecuted", dbEntity);
             return Context.SaveChanges() > 0;
         }
 
@@ -143,8 +155,9 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// </summary>
         /// <param name="entities">实体集合</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public virtual bool ChangeRange(IList<T> entities)
+        public virtual bool ChangeRange(IEnumerable<T> entities)
         {
+            logger.LogTraceEntity("ChangeRange", entities);
             foreach (var entity in entities)
             {
                 if (Context.Entry<T>(entity).State == EntityState.Detached)
@@ -163,10 +176,14 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <param name="condition">待更新实体的搜索条件</param>
         /// <param name="actionEntities">对查询的实体进行操作</param>
         /// <returns>成功则返回True，失败则返回false</returns>
-        public virtual bool ChangeRange(Expression<Func<T, bool>> condition, Action<IList<T>> actionEntities)
+        public virtual bool ChangeRange(Expression<Func<T, bool>> condition, Action<IEnumerable<T>> actionEntities)
         {
+
             IList<T> dbEntities = DbSetEntities.Where(condition).ToList();
+            logger.LogTraceEntity("ChangeRange.OnActionEntitiesExecuting", dbEntities);
             actionEntities(dbEntities);
+            logger.LogTraceEntity("ChangeRange.OnActionEntitiesExecuted", dbEntities);
+            
             return Context.SaveChanges() > 0;
         }
         /// <summary>
@@ -386,6 +403,7 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Remove(T entity)
         {
+            logger.LogTraceEntity("Remove", entity);
             if (Context.Entry<T>(entity).State == EntityState.Detached)
             {
                 Context.Attach<T>(entity);
