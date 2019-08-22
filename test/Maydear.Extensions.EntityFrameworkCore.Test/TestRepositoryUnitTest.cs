@@ -1,22 +1,28 @@
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Maydear.Extensions.EntityFrameworkCore.Test
 {
+    [TestFixture]
     public class TestRepositoryUnitTest
     {
-        private TestRepository repository;
+        private readonly TestRepository repository;
 
-        [SetUp]
-        public void Setup()
+
+        public TestRepositoryUnitTest()
         {
             repository = ServiceCollectionFactory.GetRequiredService<TestRepository>();
-            repository.Add(new Test()
-            {
-                Id = 100,
-                Name = "name100"
-            });
+        }
+
+        /// <summary>
+        /// 首次执行的时候进行初始化
+        /// </summary>
+        [OneTimeSetUp]
+        public void Setup()
+        {
             List<Test> tests = new List<Test>() {
                 new Test() {
                 Id = 1,
@@ -40,35 +46,66 @@ namespace Maydear.Extensions.EntityFrameworkCore.Test
             System.Console.WriteLine("SetUp");
         }
 
-        [Test]
-        public void AddTest()
+        /// <summary>
+        /// 执行完清理信息
+        /// </summary>
+        [OneTimeTearDown]
+        public void Cleanup()
         {
-            bool result = repository.Add(new Test()
+            repository.Remove(a => true);
+            System.Console.WriteLine("CleanUp");
+        }
+
+        [TestCaseSource(typeof(TestDataClass), "TestAddData")]
+        public bool AddTest(Test test)
+        {
+            try
             {
-                Id = 101,
-                Name = "name101"
-            });
-            System.Console.WriteLine(result.ToString());
+                bool result = repository.Add(test);
 
-            Assert.IsTrue(result);
+                System.Console.WriteLine(result.ToString());
+                return result;
+            }
+            catch(Exception ex)
+            {
+                System.Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
-        [Test]
-        public void ExistsIsTrueTest()
+        [TestCaseSource(typeof(TestDataClass), "TestExistsData")]
+        public bool ExistsTest(int id)
         {
-            bool result = repository.Exists(a => a.Id == 1);
-            System.Console.WriteLine(result.ToString());
-
-            Assert.IsTrue(result);
+            return repository.Exists(a => a.Id == id);
         }
+    }
 
-        [Test]
-        public void ExistsIsFalseTest()
+    public class TestDataClass
+    {
+        public static IEnumerable TestExistsData
         {
-            bool result = repository.Exists(a => a.Id == 200);
-            System.Console.WriteLine(result.ToString());
-
-            Assert.IsFalse(result);
+            get
+            {
+                yield return new TestCaseData(1).Returns(true);
+                yield return new TestCaseData(2).Returns(true);
+                yield return new TestCaseData(200).Returns(false);
+            }
+        }
+        public static IEnumerable TestAddData
+        {
+            get
+            {
+                yield return new TestCaseData(new Test()
+                {
+                    Id = 100,
+                    Name = "name100"
+                }).Returns(true);
+                yield return new TestCaseData(new Test()
+                {
+                    Id = 101,
+                    Name = "name101"
+                }).Returns(true);
+            }
         }
     }
 }

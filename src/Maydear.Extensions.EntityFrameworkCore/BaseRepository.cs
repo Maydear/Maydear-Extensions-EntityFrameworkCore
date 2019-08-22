@@ -74,9 +74,17 @@ namespace Maydear.Extensions.EntityFrameworkCore
         /// <returns>成功则返回True，失败则返回false</returns>
         public virtual bool Add(T entity)
         {
-            logger.LogTraceEntity("Add", entity);
-            DbSetEntities.Add(entity);
-            return Context.SaveChanges() > 0;
+            try
+            {
+                logger.LogTraceEntity("Add", entity);
+                DbSetEntities.Add(entity);
+                return Context.SaveChanges() > 0;
+            }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex, "ArgumentException");
+                return false;
+            }
         }
 
         /// <summary>
